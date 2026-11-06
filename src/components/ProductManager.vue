@@ -1,5 +1,5 @@
 <script setup>
-import { getProducts } from "../api/products";
+import { createProduct, getProducts } from "../api/products";
 </script>
 
 <script>
@@ -8,11 +8,23 @@ export default {
   data() {
     return {
       products: [],
+      newProduct: {
+        name: "",
+        price: 0,
+        inStock: false,
+      },
     };
   },
   methods: {
     async loadProducts() {
       this.products = await getProducts();
+    },
+    async addProduct(product) {
+      await createProduct(product);
+      await this.loadProducts();
+    },
+    async submitCreateProductProduct() {
+      await this.addProduct(this.newProduct);
     },
   },
   mounted() {
@@ -49,12 +61,14 @@ export default {
     </table>
 
     <form
-      class="mt-30 flex flex-col gap-2 border-2 border-stone-200 rounded-xl p-5"
+      @submit.prevent="submitCreateProductProduct"
+      class="mt-10 flex flex-col gap-2 border-2 border-stone-200 rounded-xl p-5"
     >
       <label for="name">Név:</label>
       <input
         type="text"
         name="name"
+        v-model="newProduct.name"
         class="border-2 border-stone-200 rounded-xl p-2"
       />
 
@@ -62,12 +76,18 @@ export default {
       <input
         type="number"
         name="price"
+        v-model.number="newProduct.price"
         class="border-2 border-stone-200 rounded-xl p-2"
       />
 
       <div class="flex gap-4">
         <label for="inStock">Raktáron van-e?</label>
-        <input type="checkbox" name="inStock" id="" />
+        <input
+          v-model="newProduct.inStock"
+          type="checkbox"
+          name="inStock"
+          id=""
+        />
       </div>
 
       <button
