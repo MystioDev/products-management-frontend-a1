@@ -1,5 +1,5 @@
 <script setup>
-import { createProduct, getProducts } from "../api/products";
+import { createProduct, deleteProduct, getProducts } from "../api/products";
 </script>
 
 <script>
@@ -26,6 +26,10 @@ export default {
     async submitCreateProductProduct() {
       await this.addProduct(this.newProduct);
     },
+    async removeProduct(id) {
+      await deleteProduct(id);
+      await this.loadProducts();
+    },
   },
   mounted() {
     this.loadProducts();
@@ -38,24 +42,34 @@ export default {
     <h1 class="">Termékek Management</h1>
 
     <table class="flex w-full flex-col">
-      <thead class="p-2">
-        <tr class="flex justify-around gap-8">
+      <thead class="p-2 w-full">
+        <tr class="flex justify-between gap-8">
           <th class="">azonosító</th>
           <th class="">név</th>
           <th class="">ár</th>
           <th class="">raktáron</th>
+          <th class="">Műveletek</th>
         </tr>
       </thead>
-      <tbody class="w-full">
+      <tbody class="p-2 w-full flex flex-col gap-2">
         <tr
           v-for="product in products"
-          class="flex justify-around gap-8"
+          class="flex justify-between"
           :key="product.id"
         >
           <td class="">{{ product.id }}</td>
           <td class="">{{ product.name }}</td>
           <td class="">{{ product.price }}</td>
           <td class="">{{ product.inStock ? "Igen" : "Elfogyott" }}</td>
+          <td class="">
+            <button
+              @click="removeProduct(product.id)"
+              type="button"
+              class="border-2 border-rose-500 rounded-xl font-sans text-rose-500 cursor-pointer px-3 py-1"
+            >
+              Törlés
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>

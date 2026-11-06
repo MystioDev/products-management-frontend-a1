@@ -15,4 +15,10 @@ const createProduct = async (product) => {
   return response.json();
 };
 
-export { getProducts, createProduct };
+const deleteProduct = async (id) => {
+  const response = await fetch(`${API_URL}/${id}`, {
+    method: "DELETE",
+  });
+};
+
+export { getProducts, createProduct, deleteProduct };
